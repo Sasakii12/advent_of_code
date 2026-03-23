@@ -39,6 +39,16 @@ def extract_nums(s : str) -> list[int]:
     return [int(sp[1]), int(sp[3]), int(sp[5].strip())]
 
 
+def move2(amount: int, from_i: int, to_i: int, board: list[list[str]]) -> list[list[str]]:
+    fr = board[from_i - 1] 
+    to = board[to_i - 1]
+    popped_boxes: list[str] = []  
+    for _ in range(amount): 
+        popped_boxes.append(fr.pop())
+    print(f"popped:{popped_boxes}")
+    print(f"to: {to}")
+    to += (popped_boxes[::-1])
+
 
 puzzle_inp = get_input('puzzle_inputs/day5.txt')
 n = puzzle_inp[0:8] 
@@ -47,7 +57,7 @@ stacks_list = extract_state(n)
 print(extract_nums(puzzle_inp[10]))
 for moves in puzzle_inp[10: len(puzzle_inp)]:
     amt = extract_nums(moves)
-    move(amt[0], amt[1], amt[2], stacks_list)
+    move2(amt[0], amt[1], amt[2], stacks_list)
 
 top = ''
 for i in stacks_list:
