@@ -39,7 +39,7 @@ def extract_nums(s : str) -> list[int]:
     return [int(sp[1]), int(sp[3]), int(sp[5].strip())]
 
 
-def move2(amount: int, from_i: int, to_i: int, board: list[list[str]]) -> list[list[str]]:
+def move2(amount: int, from_i: int, to_i: int, board: list[list[str]]):
     fr = board[from_i - 1] 
     to = board[to_i - 1]
     popped_boxes: list[str] = []  
