@@ -9,25 +9,12 @@ from input import get_input
 import collections
 from input import get_input_str
 
-def datastream_rec(inp : str, v: list[str]=[], start=0) -> int:
-    if inp == "":
-        return -1
-    print(inp[0])
-    print(v)
-    print(start)
-    if start % 3 == 0 and start != 0:
-        if collections.Counter(list(set(v + [inp[0]]))) != collections.Counter(v + [inp[0]]):
-            v = []
-        else:
-            return start
-
-    return datastream_rec(inp[1:], v + [inp[0]], start + 1)
     
 def datastream(inp: str):
     for i in range(4, len(inp)):
         print(f"i: {i}")
         print(inp[(i - 4):i])
-        if collections.Counter(list(set(inp[i-4:i]))) == collections.Counter(list(inp[i-4:i])):
+        if len(list(set(inp[i-4:i]))) == len(list(inp[i-4:i])):
             return i
 
 
