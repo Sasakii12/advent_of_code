@@ -10,14 +10,14 @@ import collections
 from input import get_input_str
 
     
-def datastream(inp: str):
-    for i in range(4, len(inp)):
+def datastream(inp: str, start=4):
+    for i in range(start, len(inp)):
         print(f"i: {i}")
-        print(inp[(i - 4):i])
-        if len(list(set(inp[i-4:i]))) == len(list(inp[i-4:i])):
+        print(inp[(i - start):i])
+        if len(list(set(inp[i-start:i]))) == len(list(inp[i-start:i])):
             return i
 
 
 puzzle_inp = get_input_str("puzzle_inputs/day6.txt")
-print(datastream("mjqjpqmgbljsphdztnvjfqwrcgsmlb"))
-print(datastream(puzzle_inp))
+print(datastream("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14))
+print(datastream(puzzle_inp, 14))
