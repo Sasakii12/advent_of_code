@@ -9,13 +9,13 @@
 # when a cd command is found append to or trim the dir of the string and return the numbers computed
 from input import get_input
 from functools import reduce
+from collections import Counter
 
 def parse_line(line: str) -> list[str]:
     return line.split(" ")
 
 def trim_dir(d: str) -> str:
     d_list = d.split("/")[:-1]
-    print(len(d_list))
     if len(d_list) > 1:
         return reduce(lambda x,y: x + "/" + y, d_list)
     else:
@@ -52,17 +52,29 @@ def parse_dir(puzzle_inp: list[str]):
                 size = int(line[0])
                 if dir_stack == []:
                     dir_dict["/"] += size
-                    continue
-                dir_dict[dir_to_str(dir_stack)] += size
-                dir_dict = sum_upper_dirs(dir_dict, dir_to_str(dir_stack))
-    print(dir_stack)
-    print(dir_dict)
-    res = 0
-    for i in dir_dict.keys():
-        if dir_dict[i] <= 100000:
-            res += dir_dict[i]
-    return res
+                else:
+                    dir_dict[dir_to_str(dir_stack)] += size  # raw size only, no propagation
 
+    # Single propagation pass at the end
+    for dir_str in sorted(dir_dict.keys(), key=lambda x: x.count("/"), reverse=True):
+        if dir_str != "/":
+            dir_dict = sum_upper_dirs(dir_dict, dir_str)
+
+    return dir_dict
 puzzle_inp = get_input('puzzle_inputs/day7.txt')
 clean_puzzle = list(map(lambda x : x.strip(), puzzle_inp))
-print(parse_dir(clean_puzzle))
+dir_dict = parse_dir(clean_puzzle)
+res = 0
+for i in dir_dict.keys():
+    if dir_dict[i] <= 100000:
+        res += dir_dict[i]
+print(res)
+s = 0
+for i in dir_dict.keys():
+    if Counter(i)["/"] == 1 and i != "/":
+        print(i)
+        s += dir_dict[i]
+print(f"s: {s}")
+space_needed = 70000000 - dir_dict["/"]
+print(space_needed)
+# Im too tired to finish part 2
