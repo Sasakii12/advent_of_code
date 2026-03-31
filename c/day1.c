@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 char** read_input(int *count) {
 	FILE *file;
@@ -40,6 +41,38 @@ long int max_of_arr(long int *arr, int len) {
 	return max_of_arr;
 }
 
+long int* max_of_three(long int *arr, int len) {
+
+	if (len < 3) {
+		return NULL;
+	}
+
+	long int fst = LONG_MIN, sec = LONG_MIN, thd = LONG_MIN;
+	long int *max_arr = malloc(3 * sizeof(long int));
+
+	for (int i = 0; i < len; i++) {
+		if (fst < arr[i]) {
+			fst = arr[i];
+		}
+	}
+
+	for (int j = 0; j < len; j++) {
+		if (sec < arr[j] && arr[j] != fst) {
+			sec = arr[j];
+		}
+	}
+	
+	for (int k = 0; k < len; k++) {
+		if (thd < arr[k] && arr[k] != sec && arr[k] != fst) {
+			thd = arr[k];
+		}
+	}
+	max_arr[0] = fst;
+	max_arr[1] = sec;
+	max_arr[2] = thd;
+	return max_arr;
+}
+
 long int* arr_of_max(char** str, int len, int* max_len) {
 	char *endptr; 
 	long int *arr_buf = malloc(10 * sizeof(long int));
@@ -72,8 +105,12 @@ int main(void) {
 	char **str = read_input(&len);
 	long int *arr_max = arr_of_max(str, len,&max_len);
 	long int max = max_of_arr(arr_max, max_len);
-	printf("%ld\n", max);
-
+	printf("max: %ld\n", max);
+	long int *max_three = max_of_three(arr_max, max_len);
+	printf("max of three: %ld, %ld, %ld\n",max_three[0], max_three[1], max_three[2]);
+	printf("Sum of max threes: %ld\n", sum(max_three, 3));
+	
+	free(max_three);
 	free(str);
 	free(arr_max);
 }
