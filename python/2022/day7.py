@@ -77,4 +77,4 @@ for i in dir_dict.keys():
 print(f"s: {s}")
 space_needed = 70000000 - dir_dict["/"]
 print(space_needed)
-# Im too tired to finish part 2
+# Im too tired to finish part  2

@@ -2,24 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <errno.h>
 
 char** read_input(int *count) {
 	FILE *file;
 	file = fopen("puzzle_input/day1.txt", "rb");
-	fseek(file, 0, SEEK_END);
-	size_t size = ftell(file);
-	rewind(file);
 
+	// Check if the file opening succeded, if so crash the program
+	if (file == NULL) {
+		fprintf(stderr, "Error opening file: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	fseek(file, 0, SEEK_END);
+	long size = ftell(file);
+	rewind(file);
 	char** str = (char**)malloc(size * sizeof(char*));
 	char buf[256];
 	int i = 0;
 	
-	while (fgets(buf, 256, file) != NULL) {
+	while (fgets(buf, sizeof(buf), file) != NULL) {
 		str[i] = malloc(strlen(buf) + 1);
 		strcpy(str[i], buf);
 		i++;
 	}
 	*count = i;
+	fclose(file);
 	return str;
 }
 
@@ -75,7 +83,7 @@ long int* max_of_three(long int *arr, int len) {
 
 long int* arr_of_max(char** str, int len, int* max_len) {
 	char *endptr; 
-	long int *arr_buf = malloc(10 * sizeof(long int));
+	long int *arr_buf = malloc(len * sizeof(long int));
 	int sum_counter = 0;
 	int counter = 0;
 	long int *arr_of_max = malloc(len * sizeof(long int));
@@ -87,6 +95,8 @@ long int* arr_of_max(char** str, int len, int* max_len) {
 			continue;
 		}
 		arr_buf[counter] = strtol(str[i], &endptr, 10);
+
+		// Handle cases where the input is not a number
 		if (endptr == str[i]) {
 			printf("No diigits found\n");
 			return NULL;
@@ -94,9 +104,10 @@ long int* arr_of_max(char** str, int len, int* max_len) {
 			printf("Invalid character %c\n", *endptr);
 			return NULL;
 		}
+
 		counter++; }
 	*max_len = sum_counter;
-	return arr_buf;
+	return arr_of_max;
 }
 
 int main(void) {
@@ -104,6 +115,9 @@ int main(void) {
 	int max_len;
 	char **str = read_input(&len);
 	long int *arr_max = arr_of_max(str, len,&max_len);
+	if (arr_max == NULL) {
+		exit(EXIT_FAILURE);
+	}
 	long int max = max_of_arr(arr_max, max_len);
 	printf("max: %ld\n", max);
 	long int *max_three = max_of_three(arr_max, max_len);
