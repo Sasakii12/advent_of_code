@@ -43,6 +43,7 @@ char** read_input(int *count) {
 	return str;
 }
 
+// part 1
 int calc_stairs(char** str, int str_count) {
 	int floor = 0;
 	int char_counter = 0;
@@ -59,10 +60,32 @@ int calc_stairs(char** str, int str_count) {
 	return floor;
 }
 
+// part 2
+int calc_stairs2(char** str, int str_count) {
+	int floor = 0;
+	int char_counter = 0;
+	int position = 0;
+
+	hash_table direction[] = {{'(', 1}, {')', -1}};
+	size_t table_size = sizeof(direction) / sizeof(direction[0]);
+
+	for (int i = 0; i < str_count; i++) {
+		while (str[i][char_counter] != '\0') {
+			position += 1;
+			floor += linear_search(direction, str[i][char_counter],table_size);
+			if (floor == -1) return position;
+			char_counter += 1;
+		}
+		char_counter = 0;
+	}
+	return floor;
+}
+
 int main(void) {
 	int input_count;
 	char** str = read_input(&input_count);
 	printf("%d\n", calc_stairs(str, input_count));
+	printf("%d\n", calc_stairs2(str, input_count));
 
 	free(str);
 }
